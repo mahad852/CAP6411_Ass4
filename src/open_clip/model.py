@@ -299,8 +299,8 @@ class PACL(CLIP):
             cast_dtype: Optional[torch.dtype] = None,
             output_dict: bool = False,
     ):
-        self.width = vision_cfg.width
-        self.num_patches = (vision_cfg.image_size/vision_cfg.patch_size) ** 2
+        self.width = vision_cfg['width']
+        self.num_patches = (vision_cfg['image_size']/vision_cfg['patch_size']) ** 2
 
         super().__init__(embed_dim, vision_cfg, text_cfg, quick_gelu, init_logit_scale, init_logit_bias, cast_dtype, output_dict)
 
