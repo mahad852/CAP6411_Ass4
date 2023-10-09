@@ -31,8 +31,9 @@ def run(model, classifier, dataloader, args):
                 image_features = output['image_features'] if isinstance(output, dict) else output[0]
 
                 if args.pacl:
-                    patch_similarity = image_features @ classifier
-                    weighted_patch_similarity = image_features.T @ F.softmax(patch_similarity)
+                    print(classifier.shape)
+                    patch_similarity = (image_features @ classifier.unsqueeze(2)).squeeze(2)
+                    weighted_patch_similarity = (image_features.unsqueeze(1) @ F.softmax(patch_similarity)).squeeze(1)
                     logits = 100. * weighted_patch_similarity @ classifier
                 else:
                     logits = 100. * image_features @ classifier
