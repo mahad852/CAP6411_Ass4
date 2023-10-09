@@ -351,6 +351,8 @@ class VisionTransformer(nn.Module):
         patch_height, patch_width = self.patch_size = to_2tuple(patch_size)
         self.grid_size = (image_height // patch_height, image_width // patch_width)
         self.output_dim = output_dim
+        
+        print('CLIP VISION STATS:', self.grid_size, image_height, image_width, patch_height, patch_width)
 
         # whether to layernorm each patch, as done in dual patchnorm paper - https://arxiv.org/abs/2302.01327v1
         self.input_patchnorm = input_patchnorm
@@ -483,11 +485,8 @@ class VisionTransformer(nn.Module):
         x = self.ln_pre(x)
 
         x = x.permute(1, 0, 2)  # NLD -> LND
-        print('x shape before transformer:', x.shape)
         x = self.transformer(x)
         x = x.permute(1, 0, 2)  # LND -> NLD
-
-        print('x shape after transformer:', x.shape)
 
         if self.attn_pool is not None:
             x = self.attn_pool(x)
