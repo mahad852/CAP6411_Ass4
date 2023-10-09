@@ -37,7 +37,7 @@ python -m training.main \
     --train-data="../../sbu_captions/sbucaptions/{00000..00010}.tar" \
     --warmup 2000 \
     --batch-size=256 \
-    --epochs=5 \
+    --epochs=70 \
     --workers=2 \
     --model ViT-B-32 \
     --name "ViT-B-32-Vanilla" \
@@ -45,5 +45,6 @@ python -m training.main \
     --local-loss \
     --gather-with-grad \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
-    --train-num-samples 92869 \
+    --train-num-samples 683387 \
+    --pacl
 
