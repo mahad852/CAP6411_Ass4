@@ -15,6 +15,7 @@ except ImportError:
     wandb = None
 
 from open_clip import get_input_dtype, CLIP, CustomTextCLIP
+from open_clip.loss import PACLLoss
 from .distributed import is_master
 from .zero_shot import zero_shot_eval
 from .precision import get_autocast
@@ -244,7 +245,6 @@ def train_one_epoch(model, data, loss, epoch, optimizer, scaler, scheduler, dist
             data_time_m.reset()
     # end for
 
-
 def evaluate(model, data, epoch, args, tb_writer=None):
     metrics = {}
     if not is_master(args):
@@ -269,6 +269,14 @@ def evaluate(model, data, epoch, args, tb_writer=None):
         cumulative_gen_loss = 0.0
         all_image_features, all_text_features = [], []
         with torch.no_grad():
+            pacl_loss = PACLLoss(
+                local_loss=args.local_loss,
+                gather_with_grad=args.gather_with_grad,
+                cache_labels=True,
+                rank=args.rank,
+                world_size=args.world_size,
+                use_horovod=args.horovod
+            )
             for i, batch in enumerate(dataloader):
                 images, texts = batch
                 images = images.to(device=device, dtype=input_dtype, non_blocking=True)
@@ -283,18 +291,25 @@ def evaluate(model, data, epoch, args, tb_writer=None):
                     # however, system RAM is easily exceeded and compute time becomes problematic
                     all_image_features.append(image_features.cpu())
                     all_text_features.append(text_features.cpu())
-                    logit_scale = logit_scale.mean()
-                    logits_per_image = logit_scale * image_features @ text_features.t()
-                    logits_per_text = logits_per_image.t()
 
                     batch_size = images.shape[0]
-                    labels = torch.arange(batch_size, device=device).long()
-                    total_loss = (
-                        F.cross_entropy(logits_per_image, labels) +
-                        F.cross_entropy(logits_per_text, labels)
-                    ) / 2
 
-                    gen_loss = maybe_compute_generative_loss(model_out)
+                    if args.pacl:
+                        logit_scale = logit_scale.mean()
+                        total_loss = pacl_loss(image_features, text_features, logit_scale)
+                    else:
+                        
+                        logit_scale = logit_scale.mean()
+                        logits_per_image = logit_scale * image_features @ text_features.t()
+                        logits_per_text = logits_per_image.t()
+
+                        labels = torch.arange(batch_size, device=device).long()
+                        total_loss = (
+                            F.cross_entropy(logits_per_image, labels) +
+                            F.cross_entropy(logits_per_text, labels)
+                        ) / 2
+
+                        gen_loss = maybe_compute_generative_loss(model_out)
 
                 cumulative_loss += total_loss * batch_size
                 num_samples += batch_size
