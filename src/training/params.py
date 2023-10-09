@@ -442,6 +442,12 @@ def parse_args(args):
         action="store_true",
         help='Use SigLip (sigmoid) loss.'
     )
+    parser.add_argument(
+        "--pacl",
+        default=None,
+        help='Use PACL model. '
+        'Uses PACL model when training/evaluating.'
+    )
     args = parser.parse_args(args)
 
     # If some params are not passed, we use the default values based on model name.
