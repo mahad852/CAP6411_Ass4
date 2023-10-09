@@ -445,8 +445,8 @@ def parse_args(args):
     parser.add_argument(
         "--pacl",
         default=None,
-        help='Use PACL model. '
-        'Uses PACL model when training/evaluating.'
+        help='Uses PACL model when training/evaluating.'
+        action="store_true"
     )
     args = parser.parse_args(args)
 
