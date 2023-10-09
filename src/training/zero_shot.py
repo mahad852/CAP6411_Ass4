@@ -29,7 +29,13 @@ def run(model, classifier, dataloader, args):
                 # predict
                 output = model(image=images)
                 image_features = output['image_features'] if isinstance(output, dict) else output[0]
-                logits = 100. * image_features @ classifier
+
+                if args.pacl:
+                    patch_similarity = image_features @ classifier
+                    weighted_patch_similarity = image_features.T @ F.softmax(patch_similarity)
+                    logits = 100. * weighted_patch_similarity @ classifier
+                else:
+                    logits = 100. * image_features @ classifier
 
             # measure accuracy
             acc1, acc5 = accuracy(logits, target, topk=(1, 5))
