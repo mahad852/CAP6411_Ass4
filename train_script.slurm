@@ -46,5 +46,4 @@ python -m training.main \
     --gather-with-grad \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
     --train-num-samples 92869 \
-    --pacl
 
