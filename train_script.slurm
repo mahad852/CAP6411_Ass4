@@ -27,6 +27,7 @@ export MASTER_PORT=$(expr 10000 + $(echo -n $SLURM_JOBID | tail -c 4))
 echo "include-system-site-packages=false" >> $CONDA_PREFIX/pyvenv.cfg
 export PYTHONPATH=${PYTHONPATH}:${HOME}/.local/lib/python3.10/site-packages
 
+python -m pip install tensorboard
 
 cd src
     
@@ -44,5 +45,6 @@ python -m training.main \
     --local-loss \
     --gather-with-grad \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
-    --train-num-samples 92869
+    --train-num-samples 92869 \
+    --pacl
 
