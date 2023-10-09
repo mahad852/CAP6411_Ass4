@@ -483,8 +483,11 @@ class VisionTransformer(nn.Module):
         x = self.ln_pre(x)
 
         x = x.permute(1, 0, 2)  # NLD -> LND
+        print('x shape before transformer:', x.shape)
         x = self.transformer(x)
         x = x.permute(1, 0, 2)  # LND -> NLD
+
+        print('x shape after transformer:', x.shape)
 
         if self.attn_pool is not None:
             x = self.attn_pool(x)
