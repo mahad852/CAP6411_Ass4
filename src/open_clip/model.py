@@ -230,6 +230,7 @@ class CLIP(nn.Module):
 
     def encode_image(self, image, normalize: bool = False):
         features = self.visual(image)
+        print('vision embedding shape:', features.shape)
         return F.normalize(features, dim=-1) if normalize else features
 
     def encode_text(self, text, normalize: bool = False):
@@ -272,7 +273,7 @@ class CLIP(nn.Module):
 class PACLEmbedder(nn.Module):
     def __init__(self, in_features : int, out_features : int):
         super().__init__()
-        
+
         self.fc_res = nn.Linear(in_features, out_features)
         self.fc1 = nn.Linear(in_features, out_features)
         self.fc2 = nn.Linear(in_features, out_features)
