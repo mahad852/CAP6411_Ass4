@@ -303,12 +303,15 @@ class PACL(CLIP):
 
         vision_cfg['output_tokens'] = True
         self.visual = _build_vision_tower(embed_dim, vision_cfg, quick_gelu, cast_dtype)
-
-        self.pacl_embedder = PACLEmbedder(embed_dim, embed_dim)
+        
+        self.width = vision_cfg.width
+        self.num_patches = (vision_cfg.image_size/vision_cfg.patch_size) ** 2
+        
+        self.pacl_embedder = PACLEmbedder(self.width, embed_dim)
 
     def encode_image(self, image, normalize: bool = False):
-        _, tokens = self.visual(image)
-
+        features, tokens = self.visual(image)
+        tokens.view(features.shape[0], self.num_patches, self.width)
         tokens = F.normalize(tokens, dim=-1) if normalize else tokens
         return self.pacl_embedder(tokens)
 

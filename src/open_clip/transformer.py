@@ -352,8 +352,6 @@ class VisionTransformer(nn.Module):
         self.grid_size = (image_height // patch_height, image_width // patch_width)
         self.output_dim = output_dim
         
-        print('CLIP VISION STATS:', self.grid_size, image_height, image_width, patch_height, patch_width)
-
         # whether to layernorm each patch, as done in dual patchnorm paper - https://arxiv.org/abs/2302.01327v1
         self.input_patchnorm = input_patchnorm
 
