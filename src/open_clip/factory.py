@@ -11,10 +11,10 @@ from functools import partial
 import torch
 
 from .constants import OPENAI_DATASET_MEAN, OPENAI_DATASET_STD
-from .model import CLIP, CustomTextCLIP, convert_weights_to_lp, convert_to_custom_text_state_dict,\
+from .model import CLIP, CustomTextCLIP, PACL, convert_weights_to_lp, convert_to_custom_text_state_dict,\
     resize_pos_embed, get_cast_dtype, resize_text_pos_embed
 from .coca_model import CoCa
-from .loss import ClipLoss, DistillClipLoss, CoCaLoss, SigLipLoss
+from .loss import ClipLoss, DistillClipLoss, CoCaLoss, SigLipLoss, PACLLoss
 from .openai import load_openai_model
 from .pretrained import is_pretrained_cfg, get_pretrained_cfg, download_pretrained,\
     list_pretrained_tags_by_model, download_pretrained_from_hf
@@ -141,6 +141,7 @@ def create_model(
         cache_dir: Optional[str] = None,
         output_dict: Optional[bool] = None,
         require_pretrained: bool = False,
+        is_pacl: bool = False,
         **model_kwargs,
 ):
     has_hf_hub_prefix = model_name.startswith(HF_HUB_PREFIX)
@@ -211,7 +212,7 @@ def create_model(
             else:
                 model = CustomTextCLIP(**model_cfg, **model_kwargs, cast_dtype=cast_dtype)
         else:
-            model = CLIP(**model_cfg, **model_kwargs, cast_dtype=cast_dtype)
+            model = PACL(**model_cfg, **model_kwargs, cast_dtype=cast_dtype) if is_pacl else CLIP(**model_cfg, **model_kwargs, cast_dtype=cast_dtype)
 
         if precision in ("fp16", "bf16"):
             dtype = torch.float16 if 'fp16' in precision else torch.bfloat16
@@ -279,6 +280,15 @@ def create_model(
 
 
 def create_loss(args):
+    if args.pacl:
+        return PACLLoss(
+            local_loss=args.local_loss,
+            gather_with_grad=args.gather_with_grad,
+            cache_labels=True,
+            rank=args.rank,
+            world_size=args.world_size,
+            use_horovod=args.horovod
+        )
     if args.distill:
         return DistillClipLoss(
             local_loss=args.local_loss,
@@ -332,6 +342,7 @@ def create_model_and_transforms(
         aug_cfg: Optional[Union[Dict[str, Any], AugmentationCfg]] = None,
         cache_dir: Optional[str] = None,
         output_dict: Optional[bool] = None,
+        is_pacl: Optional[bool] = True,
         **model_kwargs,
 ):
     model = create_model(
@@ -348,6 +359,7 @@ def create_model_and_transforms(
         pretrained_hf=pretrained_hf,
         cache_dir=cache_dir,
         output_dict=output_dict,
+        is_pacl=is_pacl,
         **model_kwargs,
     )
 

@@ -234,6 +234,7 @@ def main(args):
         image_std=args.image_std,
         aug_cfg=args.aug_cfg,
         output_dict=True,
+        is_pacl=True if args.pacl else False,
         **model_kwargs,
     )
     if args.distill:

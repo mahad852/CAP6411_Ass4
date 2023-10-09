@@ -268,6 +268,14 @@ class CLIP(nn.Module):
             return image_features, text_features, self.logit_scale.exp(), self.logit_bias
         return image_features, text_features, self.logit_scale.exp()
 
+class PACL(CLIP):
+    def encode_image(self, image, normalize: bool = False):
+        features = self.visual.patch_embed(image)
+        features = self.visual._pos_embed(features)
+        features = self.visual.patch_drop(features)
+        features = self.visual.norm_pre(features)
+
+        return F.normalize(features, dim=-1) if normalize else features
 
 class CustomTextCLIP(nn.Module):
     output_dict: torch.jit.Final[bool]

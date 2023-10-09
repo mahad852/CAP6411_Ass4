@@ -129,6 +129,59 @@ class ClipLoss(nn.Module):
         ) / 2
 
         return {"contrastive_loss": total_loss} if output_dict else total_loss
+    
+class PACLLoss(ClipLoss):    
+    def get_logits(self, image_features, text_features, logit_scale):
+        if self.world_size > 1:
+            all_image_features, all_text_features = gather_features(
+                image_features, text_features,
+                self.local_loss, self.gather_with_grad, self.rank, self.world_size, self.use_horovod)
+
+            if self.local_loss:
+                logits_per_image = logit_scale * image_features @ all_text_features.T
+                logits_per_text = logit_scale * text_features @ all_image_features.T
+            else:
+                logits_per_image = logit_scale * all_image_features @ all_text_features.T
+                logits_per_text = logits_per_image.T
+        else:
+            logits_per_image = logit_scale * image_features @ text_features.T
+            logits_per_text = logit_scale * text_features @ image_features.T
+        
+        return logits_per_image, logits_per_text
+    
+    def compute_patch_level_similarity(self, image_features, text_features):
+        if self.world_size > 1:
+            all_image_features, all_text_features = gather_features(
+                image_features, text_features,
+                self.local_loss, self.gather_with_grad, self.rank, self.world_size, self.use_horovod)
+
+            if self.local_loss:
+                logits_per_image = image_features @ all_text_features.T
+            else:
+                logits_per_image = all_image_features @ all_text_features.T
+        else:
+            logits_per_image = image_features @ text_features.T
+        
+        return F.softmax(logits_per_image, dim=1)
+
+    def compute_weighted_patch_similarity(self, image_features, patch_similarity):
+        return image_features.T @ patch_similarity
+
+    def forward(self, image_features, text_features, logit_scale, output_dict=False):
+        device = image_features.device
+
+        patch_level_similarity = self.compute_patch_level_similarity(image_features, text_features)
+        weighted_patch_similarity = self.compute_weighted_patch_similarity(image_features, patch_level_similarity)
+        logits_per_image, logits_per_text = self.get_logits(weighted_patch_similarity, text_features, logit_scale)
+
+        labels = self.get_ground_truth(device, logits_per_image.shape[0])
+
+        total_loss = (
+            F.cross_entropy(logits_per_image, labels) +
+            F.cross_entropy(logits_per_text, labels)
+        ) / 2
+
+        return {"contrastive_loss": total_loss} if output_dict else total_loss
 
 
 class CoCaLoss(ClipLoss):
