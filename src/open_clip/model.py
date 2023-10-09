@@ -274,7 +274,7 @@ class PACLEmbedder(nn.Module):
         super().__init__()
         self.fc_res = nn.Linear(in_features, out_features)
         self.fc1 = nn.Linear(in_features, out_features)
-        self.fc2 = nn.Linear(in_features, out_features)
+        self.fc2 = nn.Linear(out_features, out_features)
     
     def forward(self, encoder_output : torch.Tensor):
         res_output = self.fc_res(encoder_output)
