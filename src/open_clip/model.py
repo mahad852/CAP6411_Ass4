@@ -268,14 +268,48 @@ class CLIP(nn.Module):
             return image_features, text_features, self.logit_scale.exp(), self.logit_bias
         return image_features, text_features, self.logit_scale.exp()
 
-class PACL(CLIP):
-    def encode_image(self, image, normalize: bool = False):
-        features = self.visual.patch_embed(image)
-        features = self.visual._pos_embed(features)
-        features = self.visual.patch_drop(features)
-        features = self.visual.norm_pre(features)
 
-        return F.normalize(features, dim=-1) if normalize else features
+class PACLEmbedder(nn.Module):
+    def __init__(self, in_features : int, out_features : int):
+        self.fc_res = nn.Linear(in_features, out_features)
+        self.fc1 = nn.Linear(in_features, out_features)
+        self.fc2 = nn.Linear(in_features, out_features)
+    
+    def forward(self, encoder_output : torch.Tensor):
+        res_output = self.fc_res(encoder_output)
+
+        fc_output = self.fc1(encoder_output)
+        fc_output = F.relu(fc_output)
+        fc_output = self.fc2(fc_output)
+
+        fc_output += res_output
+        return fc_output
+
+
+class PACL(CLIP):
+    def __init__(
+            self,
+            embed_dim: int,
+            vision_cfg: CLIPVisionCfg,
+            text_cfg: CLIPTextCfg,
+            quick_gelu: bool = False,
+            init_logit_scale: float = np.log(1 / 0.07),
+            init_logit_bias: Optional[float] = None,
+            cast_dtype: Optional[torch.dtype] = None,
+            output_dict: bool = False,
+    ):
+        super.__init__(embed_dim, vision_cfg, text_cfg, quick_gelu, init_logit_scale, init_logit_bias, cast_dtype, output_dict)
+
+        vision_cfg.output_tokens = True
+        self.visual = _build_vision_tower(embed_dim, vision_cfg, quick_gelu, cast_dtype)
+
+        self.pacl_embedder = PACLEmbedder(embed_dim, embed_dim)
+
+    def encode_image(self, image, normalize: bool = False):
+        _, tokens = self.visual(image)
+
+        tokens = F.normalize(tokens, dim=-1) if normalize else tokens
+        return self.pacl_embedder(tokens)
 
 class CustomTextCLIP(nn.Module):
     output_dict: torch.jit.Final[bool]
