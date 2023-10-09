@@ -33,4 +33,4 @@ python -m training.main \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
     --model ViT-B-32-quickgelu \
     --pretrained laion400m_e32 \
-    --args pacl
+    --pacl
