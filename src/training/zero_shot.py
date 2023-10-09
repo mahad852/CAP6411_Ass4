@@ -32,9 +32,9 @@ def run(model, classifier, dataloader, args):
 
                 if args.pacl:
                     print(classifier.shape, image_features.shape, images.shape)
-                    patch_similarity = (image_features @ classifier.unsqueeze(2)).squeeze(2)
-                    weighted_patch_similarity = (image_features.unsqueeze(1) @ F.softmax(patch_similarity)).squeeze(1)
-                    logits = 100. * weighted_patch_similarity @ classifier
+                    patch_similarity = image_features @ classifier
+                    weighted_patch_similarity = image_features.permute(0, 2, 1) @ F.softmax(patch_similarity)
+                    logits = 100. * (weighted_patch_similarity * classifier.unsqueeze(0).repeat(64, 1, 1)).sum(dim=1)
                 else:
                     print(classifier.shape, image_features.shape, images.shape)
                     logits = 100. * image_features @ classifier
