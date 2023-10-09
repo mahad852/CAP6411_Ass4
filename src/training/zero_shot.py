@@ -31,12 +31,10 @@ def run(model, classifier, dataloader, args):
                 image_features = output['image_features'] if isinstance(output, dict) else output[0]
 
                 if args.pacl:
-                    print(classifier.shape, image_features.shape, images.shape)
                     patch_similarity = image_features @ classifier
-                    weighted_patch_similarity = image_features.permute(0, 2, 1) @ F.softmax(patch_similarity)
-                    logits = 100. * (weighted_patch_similarity * classifier.unsqueeze(0).repeat(64, 1, 1)).sum(dim=1)
+                    weighted_patch_similarity = image_features.permute(0, 2, 1) @ F.softmax(patch_similarity, dim=1)
+                    logits = 100. * (weighted_patch_similarity * classifier.unsqueeze(0).repeat(images.shape[0], 1, 1)).sum(dim=1)
                 else:
-                    print(classifier.shape, image_features.shape, images.shape)
                     logits = 100. * image_features @ classifier
 
             # measure accuracy
