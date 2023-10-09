@@ -34,7 +34,7 @@ cd src
 python -m training.main \
     --save-frequency 1 \
     --report-to tensorboard \
-    --train-data="../../sbu_captions/sbucaptions/{00000..00010}.tar" \
+    --train-data="../../sbu_captions/sbucaptions/{00000..00080}.tar" \
     --warmup 2000 \
     --batch-size=256 \
     --epochs=70 \
