@@ -36,6 +36,7 @@ def run(model, classifier, dataloader, args):
                     weighted_patch_similarity = (image_features.unsqueeze(1) @ F.softmax(patch_similarity)).squeeze(1)
                     logits = 100. * weighted_patch_similarity @ classifier
                 else:
+                    print(classifier.shape, image_features.shape, images.shape)
                     logits = 100. * image_features @ classifier
 
             # measure accuracy
