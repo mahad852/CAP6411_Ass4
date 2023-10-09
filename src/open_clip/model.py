@@ -298,7 +298,7 @@ class PACL(CLIP):
             cast_dtype: Optional[torch.dtype] = None,
             output_dict: bool = False,
     ):
-        super.__init__(embed_dim, vision_cfg, text_cfg, quick_gelu, init_logit_scale, init_logit_bias, cast_dtype, output_dict)
+        super().__init__(embed_dim, vision_cfg, text_cfg, quick_gelu, init_logit_scale, init_logit_bias, cast_dtype, output_dict)
 
         vision_cfg.output_tokens = True
         self.visual = _build_vision_tower(embed_dim, vision_cfg, quick_gelu, cast_dtype)
