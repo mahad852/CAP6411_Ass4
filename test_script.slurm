@@ -28,7 +28,7 @@ echo "include-system-site-packages=false" >> $CONDA_PREFIX/pyvenv.cfg
 export PYTHONPATH=${PYTHONPATH}:${HOME}/.local/lib/python3.10/site-packages
 
 
-cd src/open_clip
+cd src
 python -m training.main \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
     --model ViT-B-32-quickgelu \
