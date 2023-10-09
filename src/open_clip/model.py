@@ -299,13 +299,13 @@ class PACL(CLIP):
             cast_dtype: Optional[torch.dtype] = None,
             output_dict: bool = False,
     ):
+        self.width = vision_cfg.width
+        self.num_patches = (vision_cfg.image_size/vision_cfg.patch_size) ** 2
+
         super().__init__(embed_dim, vision_cfg, text_cfg, quick_gelu, init_logit_scale, init_logit_bias, cast_dtype, output_dict)
 
         vision_cfg['output_tokens'] = True
-        self.visual = _build_vision_tower(embed_dim, vision_cfg, quick_gelu, cast_dtype)
-        
-        self.width = vision_cfg.width
-        self.num_patches = (vision_cfg.image_size/vision_cfg.patch_size) ** 2
+        self.visual = _build_vision_tower(embed_dim, vision_cfg, quick_gelu, cast_dtype)    
         
         self.pacl_embedder = PACLEmbedder(self.width, embed_dim)
 
