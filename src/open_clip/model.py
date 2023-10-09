@@ -300,6 +300,7 @@ class PACL(CLIP):
     ):
         super().__init__(embed_dim, vision_cfg, text_cfg, quick_gelu, init_logit_scale, init_logit_bias, cast_dtype, output_dict)
 
+        print(vision_cfg)
         vision_cfg.output_tokens = True
         self.visual = _build_vision_tower(embed_dim, vision_cfg, quick_gelu, cast_dtype)
 
