@@ -25,22 +25,11 @@ export MASTER_ADDR=$master_addr
 export MASTER_PORT=$(expr 10000 + $(echo -n $SLURM_JOBID | tail -c 4))
 
 echo "include-system-site-packages=false" >> $CONDA_PREFIX/pyvenv.cfg
-export PYTHONPATH=${PYTHONPATH}:${HOME}/.local/lib/python3.7/site-packages
+export PYTHONPATH=${PYTHONPATH}:${HOME}/.local/lib/python3.10/site-packages
 
 
-cd /shared/open_clip
-export PYTHONPATH="$PYTHONPATH:$PWD/src"
-srun --cpu_bind=v --accel-bind=gn python -u src/training/main.py \
-    --save-frequency 1 \
-    --report-to tensorboard \
-    --train-data="/data/LAION-400M/{00000..41455}.tar" \
-    --warmup 2000 \
-    --batch-size=256 \
-    --epochs=32 \
-    --workers=8 \
-    --model ViT-B-32 \
-    --name "ViT-B-32-Vanilla" \
-    --seed 0 \
-    --local-loss \
-    --gather-with-grad
-
+cd src/open_clip
+python -m training.main \
+    --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
+    --model ViT-B-32-quickgelu \
+    --pretrained laion400m_e32
