@@ -271,6 +271,8 @@ class CLIP(nn.Module):
 
 class PACLEmbedder(nn.Module):
     def __init__(self, in_features : int, out_features : int):
+        super().__init__()
+        
         self.fc_res = nn.Linear(in_features, out_features)
         self.fc1 = nn.Linear(in_features, out_features)
         self.fc2 = nn.Linear(in_features, out_features)
