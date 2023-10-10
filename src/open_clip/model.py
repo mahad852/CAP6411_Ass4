@@ -320,8 +320,6 @@ class PACL(CLIP):
         for name, param in self.named_parameters():
             if name not in embedder_parameter_names:
                 param.requires_grad = False
-            else:
-                print(name)
 
 class CustomTextCLIP(nn.Module):
     output_dict: torch.jit.Final[bool]
