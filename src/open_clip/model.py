@@ -286,7 +286,6 @@ class PACLEmbedder(nn.Module):
         fc_output += res_output
         return fc_output
 
-
 class PACL(CLIP):
     def __init__(
             self,
@@ -314,6 +313,16 @@ class PACL(CLIP):
         tokens.view(features.shape[0], self.num_patches, self.width)
         tokens = F.normalize(tokens, dim=-1) if normalize else tokens
         return self.pacl_embedder(tokens)
+    
+    def lock_all_except_embedder(self):
+        embedder_parameter_names = ["pacl_embedder.fc_res.weight", "pacl_embedder.fc_res.bias", "pacl_embedder.fc1.weight", 
+                                    "pacl_embedder.fc1.bias", "pacl_embedder.fc2.weight", "pacl_embedder.fc2.bias"]
+        
+        for name, param in self.named_parameters():
+            if name not in embedder_parameter_names:
+                param.requires_grad = False
+            else:
+                print(name)
 
 class CustomTextCLIP(nn.Module):
     output_dict: torch.jit.Final[bool]
