@@ -45,6 +45,7 @@ python -m training.main \
     --local-loss \
     --gather-with-grad \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
-    --train-num-samples 683387
-    # --pacl
+    --train-num-samples 683387 \
+    --pacl \
+    --pretrained laion400m_e32
 
