@@ -315,12 +315,8 @@ class PACL(CLIP):
         return self.pacl_embedder(tokens)
     
     def lock_all_except_embedder(self):
-        embedder_parameter_names = [name for name, _ in self.pacl_embedder.named_parameters()]
-        
-        # ["pacl_embedder.fc_res.weight", "pacl_embedder.fc_res.bias", "pacl_embedder.fc1.weight", 
-        #                             "pacl_embedder.fc1.bias", "pacl_embedder.fc2.weight", "pacl_embedder.fc2.bias"]
-        print('embedder param names:', embedder_parameter_names)
-        
+        embedder_parameter_names = ['pacl_embedder.' + name for name, _ in self.pacl_embedder.named_parameters()]
+            
         for name, param in self.named_parameters():
             if name not in embedder_parameter_names:
                 param.requires_grad = False
