@@ -34,10 +34,10 @@ cd src
 python -m training.main \
     --save-frequency 1 \
     --report-to tensorboard \
-    --train-data="../../sbu_captions/sbucaptions/{00000..00080}.tar" \
+    --train-data="../../cc3/cc3m/{00000..00331}.tar" \
     --warmup 2000 \
     --batch-size=256 \
-    --epochs=70 \
+    --epochs=20 \
     --workers=2 \
     --model ViT-B-32 \
     --name "ViT-B-32-Vanilla" \
@@ -45,7 +45,7 @@ python -m training.main \
     --local-loss \
     --gather-with-grad \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
-    --train-num-samples 683387 \
+    --train-num-samples 2716996 \
     --pacl \
     --pretrained laion400m_e32
 
