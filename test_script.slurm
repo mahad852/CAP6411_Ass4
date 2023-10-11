@@ -32,7 +32,7 @@ cd src
 python -m training.main \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
     --model ViT-B-16 \
-    --pretrained laion400m_e32 \
+    --pretrained openai \
     # --pacl \
     # --pretrained laion400m_e32
     
