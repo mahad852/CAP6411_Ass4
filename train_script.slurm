@@ -34,7 +34,7 @@ cd src
 python -m training.main \
     --save-frequency 1 \
     --report-to tensorboard \
-    --train-data="../../cc3/cc3m/{00000..00331}.tar::../../cc12/cc12m/{00000..01135.tar}" \
+    --train-data="../../cc3/cc3m/{00000..00331}.tar::../../cc12/cc12m/{00000..01135}.tar" \
     --warmup 2000 \
     --batch-size=256 \
     --epochs=10 \
