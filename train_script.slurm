@@ -51,7 +51,7 @@ python -m training.main \
     --lr 0.0005 \
     --eps 0.000001 \
     --beta1 0.9 \
-    --beat2 0.98 \
+    --beta2 0.98 \
     --wd 0.2 \
     --dataset-resampled
 
