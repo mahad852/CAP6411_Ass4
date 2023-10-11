@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1 # But only one task
 #SBATCH --gres=gpu:2 # And two GPUs
 #SBATCH --gres-flags=enforce-binding # Insist on good CPU/GPU alignment
-#SBATCH --time=23:59:59 # Run for 1 day, at most
+#SBATCH --time=72:00:00 # Run for 1 day, at most
 #SBATCH --job-name=PACL  # Name the job so I can see it in squeue
 #SBATCH --mail-type=BEGIN,END,FAIL # Send me email for various states
 #SBATCH --mail-user ma649596@ucf.edu # Use this address
@@ -34,22 +34,24 @@ cd src
 python -m training.main \
     --save-frequency 1 \
     --report-to tensorboard \
-    --train-data="../../cc3/cc3m/{00000..00331}.tar" \
+    --train-data="../../cc3/cc3m/{00000..00331}.tar::../../cc12/cc12m/{0000..01135.tar}" \
     --warmup 2000 \
     --batch-size=256 \
-    --epochs=20 \
+    --epochs=10 \
     --workers=2 \
-    --model ViT-B-32 \
-    --name "ViT-B-32-Vanilla" \
+    --model ViT-B-16 \
+    --name "ViT-B-16-PACL" \
     --seed 0 \
     --local-loss \
     --gather-with-grad \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
-    --train-num-samples 2716996 \
+    --train-num-samples 6000000 \
     --pacl \
-    --pretrained laion400m_e32 \
+    --pretrained openai \
     --lr 0.0005 \
     --eps 0.000001 \
     --beta1 0.9 \
     --beat2 0.98 \
+    --wd 0.2 \
+    --dataset-resampled
 

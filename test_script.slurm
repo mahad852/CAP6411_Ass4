@@ -31,8 +31,8 @@ export PYTHONPATH=${PYTHONPATH}:${HOME}/.local/lib/python3.10/site-packages
 cd src
 python -m training.main \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
-    --model ViT-B-14 \
-    --resume logs/266465/checkpoints/epoch_32.pt \
+    --model ViT-B-16 \
+    --pretrained openai \
     # --pacl \
     # --pretrained laion400m_e32
     
