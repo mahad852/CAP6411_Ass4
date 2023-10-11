@@ -34,7 +34,7 @@ cd src
 python -m training.main \
     --save-frequency 1 \
     --report-to tensorboard \
-    --train-data="../../cc3/cc3m/{00000..00331}.tar::../../cc12/cc12m/{0000..01135.tar}" \
+    --train-data="../../cc3/cc3m/{00000..00331}.tar" \
     --warmup 2000 \
     --batch-size=256 \
     --epochs=10 \
@@ -45,7 +45,7 @@ python -m training.main \
     --local-loss \
     --gather-with-grad \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
-    --train-num-samples 6000000 \
+    --train-num-samples 10000 \
     --pacl \
     --pretrained laion400m_e32 \
     --lr 0.0005 \
