@@ -237,7 +237,7 @@ def main(args):
         is_pacl=args.pacl,
         **model_kwargs,
     )
-    print(model)
+
     if args.distill:
         # FIXME: currently assumes the model you're distilling from has the same tokenizer & transforms.
         dist_model, _, _ = create_model_and_transforms(

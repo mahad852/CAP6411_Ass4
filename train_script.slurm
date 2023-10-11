@@ -47,7 +47,7 @@ python -m training.main \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
     --train-num-samples 6000000 \
     --pacl \
-    --pretrained openai \
+    --pretrained laion400m_e32 \
     --lr 0.0005 \
     --eps 0.000001 \
     --beta1 0.9 \
