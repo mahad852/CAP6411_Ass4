@@ -234,9 +234,10 @@ def main(args):
         image_std=args.image_std,
         aug_cfg=args.aug_cfg,
         output_dict=True,
-        is_pacl=True if args.pacl else False,
+        is_pacl=args.pacl,
         **model_kwargs,
     )
+    print(model)
     if args.distill:
         # FIXME: currently assumes the model you're distilling from has the same tokenizer & transforms.
         dist_model, _, _ = create_model_and_transforms(
