@@ -40,18 +40,19 @@ python -m training.main \
     --epochs=10 \
     --workers=2 \
     --model ViT-B-16 \
-    --name "ViT-B-16-PACL" \
+    --name "ViT-B-16-CLIP" \
     --seed 0 \
     --local-loss \
     --gather-with-grad \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
     --train-num-samples 6000000 \
-    --pacl \
     --pretrained laion400m_e32 \
     --lr 0.0005 \
     --eps 0.000001 \
     --beta1 0.9 \
     --beta2 0.98 \
     --wd 0.2 \
-    --dataset-resampled
+    --dataset-resampled \
+    --zeroshot-frequency 1 \
+    # --pacl \
 
