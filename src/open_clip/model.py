@@ -278,7 +278,7 @@ class PACLEmbedder(nn.Module):
     
     def forward(self, encoder_output : torch.Tensor):
         res_output = self.fc_res(encoder_output)
-
+        
         fc_output = self.fc1(encoder_output)
         fc_output = F.relu(fc_output)
         fc_output = self.fc2(fc_output)

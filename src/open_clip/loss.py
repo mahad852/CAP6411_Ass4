@@ -156,13 +156,13 @@ class PACLLoss(ClipLoss):
                 self.local_loss, self.gather_with_grad, self.rank, self.world_size, self.use_horovod)
 
             if self.local_loss:
-                logits_per_image = torch.bmm(image_features, all_text_features.unsqueeze(2)).squeeze(2)
+                patch_level_similarity = torch.bmm(image_features, all_text_features.unsqueeze(2)).squeeze(2)
             else:
-                logits_per_image = torch.bmm(all_image_features, all_text_features.unsqueeze(2)).squeeze(2)
+                patch_level_similarity = torch.bmm(all_image_features, all_text_features.unsqueeze(2)).squeeze(2)
         else:
-            logits_per_image = torch.bmm(image_features, text_features.unsqueeze(2)).squeeze(2)
+            patch_level_similarity = torch.bmm(image_features, text_features.unsqueeze(2)).squeeze(2)
         
-        return F.softmax(logits_per_image, dim=1)
+        return F.softmax(patch_level_similarity, dim=1)
 
     def compute_weighted_patch_similarity(self, image_features, patch_similarity):
         return torch.bmm(image_features.permute(0, 2, 1), patch_similarity.unsqueeze(2)).squeeze(2)
