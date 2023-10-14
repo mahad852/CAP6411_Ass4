@@ -311,7 +311,6 @@ class PACL(CLIP):
     def encode_image(self, image, normalize: bool = False):
         features, tokens = self.visual(image)
         tokens.view(features.shape[0], self.num_patches, self.width)
-        tokens = F.normalize(tokens, dim=-1) if normalize else tokens
         return F.normalize(self.pacl_embedder(tokens), dim = -1)
     
     def lock_all_except_embedder(self):

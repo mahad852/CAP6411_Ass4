@@ -34,25 +34,27 @@ cd src
 python -m training.main \
     --save-frequency 1 \
     --report-to tensorboard \
-    --train-data="../../cc3/cc3m/{00000..00331}.tar::../../cc12/cc12m/{00000..01135}.tar" \
+    --train-data="../../cc3/cc3m/{00000..00265}.tar::../../cc12/cc12m/{00000..00908}.tar" \
+    --val-data="../../cc3/cc3m/{00266..00331}.tar::../../cc12/cc12m/{00909..01135}.tar" \
     --warmup 2000 \
     --batch-size=256 \
     --epochs=10 \
     --workers=2 \
     --model ViT-B-16 \
-    --name "ViT-B-16-CLIP" \
+    --name "ViT-B-16-PACL" \
     --seed 0 \
     --local-loss \
     --gather-with-grad \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
-    --train-num-samples 6000000 \
+    --train-num-samples 9062242 \
+    --val-num-samples 2277459 \
     --pretrained laion400m_e32 \
     --lr 0.0005 \
     --eps 0.000001 \
     --beta1 0.9 \
     --beta2 0.98 \
     --wd 0.2 \
-    --dataset-resampled \
     --zeroshot-frequency 1 \
-    # --pacl \
+    --pacl \
+    # --dataset-resampled \
 
