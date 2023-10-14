@@ -297,6 +297,7 @@ def evaluate(model, data, epoch, args, tb_writer=None):
                     if args.pacl:
                         logit_scale = logit_scale.mean()
                         total_loss = pacl_loss(image_features, text_features, logit_scale)
+                        gen_loss = None
                     else:
                         
                         logit_scale = logit_scale.mean()
