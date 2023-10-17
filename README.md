@@ -1,3 +1,7 @@
+# PACL
+Forked from open_clip, this repository includes implementation for PACL. Checkout the instructions below, and then checkout the train_script.slurm and test_script.slurm files to get an idea about the new args added (e.g: pacl) and how to use them.
+
+
 # OpenCLIP
 
 [[Paper]](https://arxiv.org/abs/2212.07143) [[Citations]](#citing) [[Clip Colab]](https://colab.research.google.com/github/mlfoundations/open_clip/blob/master/docs/Interacting_with_open_clip.ipynb) [[Coca Colab]](https://colab.research.google.com/github/mlfoundations/open_clip/blob/master/docs/Interacting_with_open_coca.ipynb)
