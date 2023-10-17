@@ -1,5 +1,4 @@
 from open_clip.model import PACL
-from open_clip.loss import PACLLoss
 from open_clip.transform import image_transform
 from open_clip import get_tokenizer
 
@@ -8,8 +7,7 @@ import torch.nn.functional as F
 from torchvision import transforms as T
 import os
 
-from torchvision.transforms import Normalize, Compose, RandomResizedCrop, InterpolationMode, ToTensor, Resize, \
-    CenterCrop, ColorJitter, Grayscale
+from torchvision.transforms import InterpolationMode, Resize, CenterCrop
 
 LABELS = [
     'A photo of an airplane',
@@ -80,8 +78,7 @@ def perform_segmentation(img_path: str, model: PACL, model_name: str):
 
         for r in range(row_index, row_index + 14):
             for c in range(col_index, col_index + 14):
-                # img_original.putpixel((r, c), color)
-                continue
+                img_original.putpixel((r, c), color)
     
 
     new_img_path = os.path.join(os.sep.join(img_path.split(os.sep)[:-1]), 'seg.png')
