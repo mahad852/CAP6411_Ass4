@@ -45,7 +45,7 @@ def load_image(img_path: str, model: PACL):
 def get_original_image(img_path: str, model: PACL):
     image = Image.open(img_path)
     original_converter = T.Compose([
-        Resize(model.visual.image_size, interpolation=InterpolationMode.BICUBIC),
+        Resize((1024, 1024), interpolation=InterpolationMode.BICUBIC),
         CenterCrop(model.visual.image_size)
     ])
     return original_converter(image)
