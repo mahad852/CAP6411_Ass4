@@ -34,7 +34,7 @@ def load_image(img_path: str, model: PACL):
     image_std = getattr(model.visual, 'image_std', None)
     
     transform = image_transform(
-        (1024, 1024),
+        model.visual.image_size,
         is_train=False,
         mean=image_mean,
         std=image_std,
@@ -45,7 +45,7 @@ def load_image(img_path: str, model: PACL):
 def get_original_image(img_path: str, model: PACL):
     image = Image.open(img_path)
     original_converter = T.Compose([
-        Resize((1024, 1024), interpolation=InterpolationMode.BICUBIC),
+        Resize(model.visual.image_size, interpolation=InterpolationMode.BICUBIC),
         CenterCrop(model.visual.image_size)
     ])
     return original_converter(image)

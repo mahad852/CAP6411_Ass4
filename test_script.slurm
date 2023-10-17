@@ -29,11 +29,22 @@ export PYTHONPATH=${PYTHONPATH}:${HOME}/.local/lib/python3.10/site-packages
 
 
 cd src
+
+# zero shot evaluating a model
 python -m training.main \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
     --model ViT-B-16 \
     --resume logs/ViT-B-16-PACL/checkpoints/epoch_9.pt \
     --pacl \
-    --segmentation \
-    --img_path ../seg_images/Michael-Cera.jpg
+    # --pretrained laion400m_e32
     
+
+# segmenting an image
+# python -m training.main \
+#     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
+#     --model ViT-B-16 \
+#     --resume logs/ViT-B-16-PACL/checkpoints/epoch_9.pt \
+#     --pacl \
+#     --segmentation \
+#     --img_path ../seg_images/Michael-Cera.jpg
+
