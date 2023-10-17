@@ -35,5 +35,5 @@ python -m training.main \
     --resume logs/ViT-B-16-PACL/checkpoints/epoch_9.pt \
     --pacl \
     --segmentation \
-    --img_path ../seg_images/ebabjhh4hba1hebjfoux.jpg
+    --img_path ../seg_images/AdobeStock_219922748.jpeg
     
