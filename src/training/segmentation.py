@@ -52,7 +52,10 @@ def perform_segmentation(img_path: str, model: PACL, model_name: str):
     class_embeddings = class_embeddings / class_embeddings.norm(dim=1, keepdim=True)
     class_embeddings = class_embeddings.T
 
-    print(class_embeddings.shape)
+    output = model(image=img)
+    image_features = output['image_features'] if isinstance(output, dict) else output[0]
+
+    print(img.shape, class_embeddings.shape, image_features.shape)
     
     patch_similarity = img @ class_embeddings
 
