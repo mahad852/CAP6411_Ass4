@@ -22,7 +22,7 @@ COLORS = [
 ]
 
 def load_image(img_path: str, model: PACL):
-    Image.open(img_path)
+    image = Image.open(img_path)
 
     image_mean = getattr(model.visual, 'image_mean', None)
     image_std = getattr(model.visual, 'image_std', None)
@@ -51,6 +51,8 @@ def perform_segmentation(img_path: str, model: PACL, model_name: str):
     class_embeddings = class_embeddings.view(4, -1)
     class_embeddings = class_embeddings / class_embeddings.norm(dim=1, keepdim=True)
     class_embeddings = class_embeddings.T
+
+    print(class_embeddings.shape)
     
     patch_similarity = img @ class_embeddings
 
