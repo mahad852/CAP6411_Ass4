@@ -12,7 +12,7 @@ import torch
 from torch import optim
 from torch.cuda.amp import GradScaler
 
-from src.training.segmentation import perform_segmentation
+from training.segmentation import perform_segmentation
 
 try:
     import wandb
