@@ -59,7 +59,18 @@ def perform_segmentation(img_path: str, model: PACL, model_name: str):
     patch_similarity = image_features @ class_embeddings
     patch_similarity = F.softmax(patch_similarity[0], dim = 1).argmax(dim = 1)
 
-    img_original = T.ToPILImage()(img.squeeze(0))
+
+    mean=getattr(model.visual, 'image_mean')
+    std = getattr(model.visual, 'image_std', None)
+    original_converter = T.Compose([
+        T.ToPILImage(),
+        T.Normalize(
+            mean=[-mean[0], -mean[1], -mean[2]],
+            std =[1/std[0], 1/std[1], 1/std[2]]
+        )
+    ])
+    img_original = original_converter(img.squeeze(0))
+
 
     for i_patch in range(len(patch_similarity)):
         color = COLORS[patch_similarity[i_patch].item()]
