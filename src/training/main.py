@@ -416,6 +416,12 @@ def main(args):
         logging.info('Compiling model...')
         model = torch.compile(original_model)
 
+    if args.segmentation:
+        loss = create_loss(args)
+        img_path = args.img_path
+        perform_segmentation(img_path, model, args.model)
+        return
+
     if 'train' not in data:
         # If using int8, convert to inference mode.
         if args.use_bnb_linear is not None:
@@ -426,11 +432,6 @@ def main(args):
         return
 
     loss = create_loss(args)
-
-    if args.segmentation:
-        img_path = args.img_path
-        perform_segmentation(img_path, model, args.model)
-        return
 
     for epoch in range(start_epoch, args.epochs):
         if is_master(args):
