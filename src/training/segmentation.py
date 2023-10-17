@@ -61,7 +61,7 @@ def perform_segmentation(img_path: str, model: PACL, model_name: str):
 
     img_original = T.ToPILImage()(img.squeeze(0))
 
-    for i_patch in len(range(len(patch_similarity))):
+    for i_patch in range(len(patch_similarity)):
         color = COLORS[patch_similarity[i_patch].item()]
 
         row_index = int(i_patch / 14)
