@@ -73,8 +73,8 @@ def perform_segmentation(img_path: str, model: PACL, model_name: str):
     for i_patch in range(len(patch_similarity)):
         color = COLORS[patch_similarity[i_patch].item()]
 
-        row_index = int(i_patch / 14) * 14
-        col_index = (i_patch % 14) * 14
+        row_index = int(i_patch / 14) * 16
+        col_index = (i_patch % 14) * 16
 
         for r in range(row_index, row_index + 16):
             for c in range(col_index, col_index + 16):
