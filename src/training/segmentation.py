@@ -17,10 +17,10 @@ LABELS = [
 ]
 
 COLORS = [
-    (220,20,60), # red
-    (135,206,235), # blue
-    (50,205,50), # green
-    (0, 0, 0)
+    (220,20,60), # red -airplane
+    (135,206,235), # blue - dog
+    (50,205,50), # green - chair
+    (0, 0, 0) # background
 ]
 
 def load_image(img_path: str, model: PACL):

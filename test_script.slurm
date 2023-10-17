@@ -35,5 +35,5 @@ python -m training.main \
     --resume logs/ViT-B-16-PACL/checkpoints/epoch_9.pt \
     --pacl \
     --segmentation \
-    --img_path ../seg_images/young-mongrel-dog-chewing-soft-toy-wooden-chair-9446135.jpg
+    --img_path ../seg_images/ebabjhh4hba1hebjfoux.jpg
     
