@@ -32,7 +32,7 @@ cd src
 python -m training.main \
     --imagenet-val /datasets/ImageNet2012nonpub/validation/ \
     --model ViT-B-16 \
-    --resume logs/ViT-B-16-PACL/checkpoints/epoch9.pt \
+    --resume logs/ViT-B-16-PACL/checkpoints/epoch_9.pt \
     --pacl \
     --segmentation \
     --img_path ../seg_images/airplane.png
