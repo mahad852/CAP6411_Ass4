@@ -5,7 +5,8 @@ from open_clip import get_tokenizer
 
 from PIL import Image
 import torch.nn.functional as F
-
+from torchvision import transforms as T
+import os
 
 LABELS = [
     'A photo of an airplane',
@@ -15,10 +16,10 @@ LABELS = [
 ]
 
 COLORS = [
-    [220,20,60],
-    [135,206,235],
-    [50,205,50],
-    [0, 0, 0]
+    (220,20,60),
+    (135,206,235),
+    (50,205,50),
+    (0, 0, 0)
 ]
 
 def load_image(img_path: str, model: PACL):
@@ -54,9 +55,22 @@ def perform_segmentation(img_path: str, model: PACL, model_name: str):
 
     output = model(image=img)
     image_features = output['image_features'] if isinstance(output, dict) else output[0]
-
-    print(img.shape, class_embeddings.shape, image_features.shape)
     
-    patch_similarity = img @ class_embeddings
+    patch_similarity = image_features @ class_embeddings
+    patch_similarity = F.softmax(patch_similarity[0], dim = 1).argmax(dim = 1)
 
-    print(patch_similarity)
+    img_original = T.ToPILImage()(img.squeeze(0))
+
+    for i_patch in len(range(patch_similarity)):
+        color = COLORS[patch_similarity[i_patch].item()]
+
+        row_index = int(i_patch / 14)
+        col_index = (i_patch % 14) * 14
+
+        for r in range(row_index, row_index + 14):
+            for c in range(col_index, col_index + 14):
+                img_original[r][c] = color
+    
+
+    new_img_path = os.path.join(os.sep.join(img_path.split(os.sep)[:-1]), 'seg.png')
+    img_original.save(new_img_path)
