@@ -8,6 +8,9 @@ import torch.nn.functional as F
 from torchvision import transforms as T
 import os
 
+from torchvision.transforms import Normalize, Compose, RandomResizedCrop, InterpolationMode, ToTensor, Resize, \
+    CenterCrop, ColorJitter, Grayscale
+
 LABELS = [
     'A photo of an airplane',
     'A photo of a dog',
@@ -37,6 +40,14 @@ def load_image(img_path: str, model: PACL):
     image = transform(image)
     return image.unsqueeze(0)
 
+def get_original_image(img_path: str, model: PACL):
+    image = Image.open(img_path)
+    original_converter = T.Compose([
+        Resize(model.visual.image_size, interpolation=InterpolationMode.BICUBIC),
+        CenterCrop(model.visual.image_size)
+    ])
+    return original_converter(image)
+
 def get_all_labels():
     return [
         'This is an image of airplane',
@@ -58,19 +69,8 @@ def perform_segmentation(img_path: str, model: PACL, model_name: str):
     
     patch_similarity = image_features @ class_embeddings
     patch_similarity = F.softmax(patch_similarity[0], dim = 1).argmax(dim = 1)
-
-
-    mean=getattr(model.visual, 'image_mean')
-    std = getattr(model.visual, 'image_std', None)
-    original_converter = T.Compose([
-        T.Normalize(
-            mean=[-mean[0], -mean[1], -mean[2]],
-            std =[1/std[0], 1/std[1], 1/std[2]]
-        ),
-        T.ToPILImage()
-    ])
-    img_original = original_converter(img.squeeze(0))
-
+    
+    img_original = get_original_image(img_path, model)
 
     for i_patch in range(len(patch_similarity)):
         color = COLORS[patch_similarity[i_patch].item()]
