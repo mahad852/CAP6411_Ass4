@@ -1,6 +1,6 @@
-from src.open_clip.model import PACL
-from src.open_clip.loss import PACLLoss
-from src.open_clip.transform import image_transform
+from open_clip.model import PACL
+from open_clip.loss import PACLLoss
+from open_clip.transform import image_transform
 from open_clip import get_tokenizer
 
 from PIL import Image
