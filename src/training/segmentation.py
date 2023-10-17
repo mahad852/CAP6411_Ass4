@@ -24,8 +24,8 @@ COLORS = [
 def load_image(img_path: str, model: PACL):
     Image.open(img_path)
 
-    image_mean = image_mean or getattr(model.visual, 'image_mean', None)
-    image_std = image_std or getattr(model.visual, 'image_std', None)
+    image_mean = getattr(model.visual, 'image_mean', None)
+    image_std = getattr(model.visual, 'image_std', None)
     
     transform = image_transform(
         model.visual.image_size,
