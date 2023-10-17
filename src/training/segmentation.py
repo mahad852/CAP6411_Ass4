@@ -34,7 +34,7 @@ def load_image(img_path: str, model: PACL):
     image_std = getattr(model.visual, 'image_std', None)
     
     transform = image_transform(
-        model.visual.image_size,
+        (1024, 1024),
         is_train=False,
         mean=image_mean,
         std=image_std,
