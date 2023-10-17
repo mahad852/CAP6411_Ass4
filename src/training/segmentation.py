@@ -46,7 +46,7 @@ def perform_segmentation(img_path: str, model: PACL, model_name: str):
     img = load_image(img_path, model).to('cuda')
     
     tokenizer = get_tokenizer(model_name)
-    texts = tokenizer(texts).to('cuda')
+    texts = tokenizer(LABELS).to('cuda')
     class_embeddings = F.normalize(model.encode_text(texts), dim=-1)
     class_embeddings = class_embeddings.view(4, -1)
     class_embeddings = class_embeddings / class_embeddings.norm(dim=1, keepdim=True)
