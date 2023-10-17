@@ -69,7 +69,7 @@ def perform_segmentation(img_path: str, model: PACL, model_name: str):
 
         for r in range(row_index, row_index + 14):
             for c in range(col_index, col_index + 14):
-                img_original[r][c] = color
+                img_original.putpixel((r, c), color)
     
 
     new_img_path = os.path.join(os.sep.join(img_path.split(os.sep)[:-1]), 'seg.png')
