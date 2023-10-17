@@ -16,9 +16,9 @@ LABELS = [
 ]
 
 COLORS = [
-    (220,20,60),
-    (135,206,235),
-    (50,205,50),
+    (220,20,60), # red
+    (135,206,235), # blue
+    (50,205,50), # green
     (0, 0, 0)
 ]
 
@@ -64,7 +64,7 @@ def perform_segmentation(img_path: str, model: PACL, model_name: str):
     for i_patch in range(len(patch_similarity)):
         color = COLORS[patch_similarity[i_patch].item()]
 
-        row_index = int(i_patch / 14)
+        row_index = int(i_patch / 14) * 14
         col_index = (i_patch % 14) * 14
 
         for r in range(row_index, row_index + 14):
