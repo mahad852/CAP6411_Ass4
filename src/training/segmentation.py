@@ -15,6 +15,7 @@ LABELS = [
     'A photo a wooden chair',
     'A photo of a background',
     'A photo of a cat',
+    'A photo of a person'
 ]
 
 COLORS = [
@@ -22,7 +23,8 @@ COLORS = [
     (135,206,235), # blue - dog
     (50,205,50), # green - chair
     (0, 0, 0), # background
-    (255,255,0) #yellow - cat
+    (255,255,0), #yellow - cat
+    (255, 165, 0) #orange - person
 ]
 
 def load_image(img_path: str, model: PACL):
@@ -47,12 +49,6 @@ def get_original_image(img_path: str, model: PACL):
         CenterCrop(model.visual.image_size)
     ])
     return original_converter(image)
-
-def get_all_labels():
-    return [
-        'This is an image of airplane',
-        'This is the background'
-    ]
 
 def perform_segmentation(img_path: str, model: PACL, model_name: str):
     img = load_image(img_path, model).to('cuda')
