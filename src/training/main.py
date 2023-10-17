@@ -12,6 +12,8 @@ import torch
 from torch import optim
 from torch.cuda.amp import GradScaler
 
+from segmentation import perform_segmentation
+
 try:
     import wandb
 except ImportError:
@@ -424,6 +426,11 @@ def main(args):
         return
 
     loss = create_loss(args)
+
+    if args.segmentation:
+        img_path = args.img_path
+        perform_segmentation(img_path, model, args.model)
+        return
 
     for epoch in range(start_epoch, args.epochs):
         if is_master(args):

@@ -448,6 +448,21 @@ def parse_args(args):
         help='Uses PACL model when training/evaluating.',
         action="store_true"
     )
+
+    parser.add_argument(
+        '--segmentation',
+        default=None,
+        help='Option that makes the script peform segmentation',
+        action='store_true'
+    )
+
+    parser.add_argument(
+        "--img_path",
+        type=str,
+        default='',
+        help="Path of the image for segmentation.",
+    )
+
     args = parser.parse_args(args)
 
     # If some params are not passed, we use the default values based on model name.
